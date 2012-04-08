@@ -33,17 +33,34 @@
 
 (defconst rule-mode-version "0.2")
 
-(define-derived-mode rule-mode text-mode "RULES"
+(defvar rule-mode-alist (list) "Global list of RULES buffers")
+
+(defgroup rule-mode nil
+	"Rule-based comments mode."
+	:group 'programming)
+
+;;;###autoload
+(define-derived-mode rule-mode text-mode "RULES" ; RULE#5
   (make-local-variable 'font-lock-defaults)
-	(setq font-lock-defaults
+ 	(setq font-lock-defaults
 				'((("RULE#[0-9]+\\(->\\)RULE#[0-9]+" 1 font-lock-keyword-face) ; RULE#2
-					 ("\\(-\\|<-\\)RULE#[0-9]+" . font-lock-doc-face) ; RULE#1, RULE#3
-					 ("RULE#[0-9]+" . font-lock-keyword-face) ; RULE#0
-					 ("^-*-.+-*-$" . font-lock-comment-face))))
+					 ("\\(-\\|<-\\)RULE#[0-9]+" . font-lock-doc-face) ; RULE#1 RULE#3
+					 ("RULE#[0-9]+" . font-lock-keyword-face)))) ; RULE#0					 
 	(run-mode-hooks 'rule-mode-hook))
+
+(add-hook 'rule-mode-hook	(lambda () (add-to-list 'rule-mode-alist (file-truename (buffer-file-name (current-buffer)) . (current-buffer)))))
 
 (autoload 'rule-mode "rule-mode" "Major mode for rule-based comments." t)
 (add-to-list 'auto-mode-alist '("^RULES|RULES.txt$" . rule-mode)) ; RULE#4
+
+;;;###autoload
+(define-minor-mode rule-minor-mode ; RULE#6
+	"Toggle minor rule-mode."
+	:init-value nil
+	:lighter " RULES"
+	:group   'rule-mode
+	:require 'rule-mode)
+
 
 (provide 'rule-mode)
 

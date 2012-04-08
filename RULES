@@ -5,4 +5,5 @@ RULE#1 New rules added but old rules don't removed. Obsoleted rules just marked 
 RULE#2 RULE#A->RULE#B shows what rule A obsoleted by rule B.
 RULE#3 RULE#B<-RULE#A shows that rule B obsoletes rule A.
 RULE#4 Rules stored in files named as RULES or RULES.txt.
-
+RULE#5 Major mode applied to RULES-files.
+RULE#6 Minor mode applied to files with a source code.
