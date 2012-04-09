@@ -27,6 +27,10 @@
 ;;; Commentary:
 ;;
 
+;; К разработке:
+; хук к rule-mode: при открытии файла RULES искать буферы со включённым rule-minor-mode и проставлять для них rule-mode-buffer-with-rules если оно соответствует открытому RULES
+; RULE#7 при инициализации rule-minor-mode искать подходящий RULES в rule-mode-alist и проставлять в rule-mode-buffer-with-rules
+
 ;;; Code:
 
 (require 'font-lock)
@@ -61,7 +65,7 @@
 	:lighter " RULES"
 	:group   'rule-mode
 	:require 'rule-mode
-	(make-variable-buffer-local 'rule-mode-buffer-with-rules)
+	(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
 	(setq rule-mode-buffer-with-rules (cdr (assoc-string (rule-mode-buffer-directory) rule-mode-alist)))
 	;(run-hooks 'rule-minor-mode)
 )
