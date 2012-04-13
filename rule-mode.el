@@ -30,6 +30,9 @@
 ;; К разработке:
 ; хук к rule-mode: при открытии файла RULES искать буферы со включённым rule-minor-mode и проставлять для них rule-mode-buffer-with-rules если оно соответствует открытому RULES
 ; RULE#7 при инициализации rule-minor-mode искать подходящий RULES в rule-mode-alist и проставлять в rule-mode-buffer-with-rules
+;
+; команда сортировки по номерам правил в файле RULES
+; команда генерации RULE#NN с подстановкой номера NN
 
 ;;; Code:
 
@@ -48,7 +51,7 @@
  	(setq font-lock-defaults
 				'((("RULE#[0-9]+\\(->\\)RULE#[0-9]+" 1 font-lock-keyword-face) ; RULE#2
 					 ("\\(-\\|<-\\)RULE#[0-9]+" . font-lock-doc-face) ; RULE#1 RULE#3
-					 ("RULE#[0-9]+" . font-lock-keyword-face)))) ; RULE#0					 
+					 ("RULE#[0-9]+" . font-lock-keyword-face)))) ; RULE#0
 	(run-mode-hooks 'rule-mode-hook))
 
 (add-to-list 'auto-mode-alist '("^RULES|RULES.txt$" . rule-mode)) ; RULE#4
@@ -57,7 +60,7 @@
 	(file-name-directory (file-truename (buffer-file-name (current-buffer)))))
 
 (add-hook 'rule-mode-hook	(lambda () (add-to-list 'rule-mode-alist (list (rule-mode-buffer-directory) (current-buffer)))))
- 
+
 ;;;###autoload
 (define-minor-mode rule-minor-mode ; RULE#6
 	"Toggle minor rule-mode."
@@ -66,8 +69,11 @@
 	:group   'rule-mode
 	:require 'rule-mode
 	(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
-	(setq rule-mode-buffer-with-rules (cdr (assoc-string (rule-mode-buffer-directory) rule-mode-alist)))
+	(setq rule-mode-buffer-with-rules (cdr (assoc-string (rule-mode-buffer-directory) rule-mode-alist))) ; XXX
 	;(run-hooks 'rule-minor-mode)
+)
+
+(defun rule-mode-looking-for-rule ()
 )
 
 (provide 'rule-mode)
