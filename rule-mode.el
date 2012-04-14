@@ -37,6 +37,9 @@
 ;;; Code:
 
 (require 'font-lock)
+(require 'thingatpt)
+
+(provide 'rule-mode)
 
 (defconst rule-mode-version "0.3")
 
@@ -69,14 +72,31 @@
 	:group   'rule-mode
 	:require 'rule-mode
 	(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
-	(setq rule-mode-buffer-with-rules (cdr (assoc-string (rule-mode-buffer-directory) rule-mode-alist))) ; XXX
+	(setq rule-mode-buffer-with-rules (second (assoc-string (rule-mode-buffer-directory) rule-mode-alist))) ; XXX
 	;(run-hooks 'rule-minor-mode)
 )
 
-(defun rule-mode-looking-for-rule ()
-	
-)
+(defun rule-mode-bounds-of-rule-at-point ()
+	"Return the start and end points of an integer at the current point.
+   The result is a paired list of character positions for an RULE regexp."
+	(save-excursion
+		(skip-chars-backward "RULE#0123456789")
+		(if (looking-at "RULE#[0-9]+")
+				(cons (point) (match-end 0))
+			nil)))
 
-(provide 'rule-mode)
+(put 'rule 'bounds-of-thing-at-point 'rule-mode-bounds-of-rule-at-point)
+
+(defun rule-mode-looking-for-rule ()
+	(interactive)
+	(let ((current-rule (thing-at-point 'rule)))
+		(if current-rule
+				(progn
+					(setq current-rule (buffer-substring-no-properties (match-beginning 0) (match-end 0)))
+					(switch-to-buffer rule-mode-buffer-with-rules)
+					(beginning-of-buffer)
+					(search-forward current-rule nil nil)
+					(beginning-of-line)))))
 
 ;;; rule-mode.el ends here
+
