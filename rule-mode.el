@@ -74,6 +74,7 @@
 )
 
 (defun rule-mode-looking-for-rule ()
+	
 )
 
 (provide 'rule-mode)
