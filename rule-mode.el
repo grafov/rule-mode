@@ -69,6 +69,7 @@
 	"Toggle minor rule-mode."
 	:init-value nil
 	:lighter " RULES"
+	:keymap `((,(kbd "M-RET") . rule-mode-looking-for-rule))
 	:group   'rule-mode
 	:require 'rule-mode
 	(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
