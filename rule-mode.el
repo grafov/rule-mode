@@ -41,7 +41,7 @@
 
 (provide 'rule-mode)
 
-(defconst rule-mode-version "0.3")
+(defconst rule-mode-version "0.4")
 
 (defvar rule-mode-alist '() "Global list of RULES buffers")
 
