@@ -2,7 +2,7 @@
 
 ;; Copyright © 2012 Alexander I.Grafov
 
-;; Author: Alexander I.Grafov <axel@drupal.ru>
+;; Author: Alexander I.Grafov <grafov@gmail.com>
 ;; Version: 0.2
 ;; Keywords: programming
 ;; URL: https://github.com/siberianlaika/rule-mode
