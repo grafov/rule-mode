@@ -48,8 +48,13 @@
 (defgroup rule-mode nil "Rule-based comments mode."
 	:group 'programming)
 
+(defcustom rule-mode-label "RULES"
+	"Minibuffer' label for major and minor rule-modes."
+	:type 'string
+	:group 'rule-mode)
+
 ;;;###autoload
-(define-derived-mode rule-mode text-mode "RULES" ; RULE#5
+(define-derived-mode rule-mode text-mode rule-mode-label ; RULE#5
   (make-local-variable 'font-lock-defaults)
  	(setq font-lock-defaults
 				'((("RULE#[0-9]+\\(->\\)RULE#[0-9]+" 1 font-lock-keyword-face) ; RULE#2
@@ -62,20 +67,26 @@
 (defun rule-mode-buffer-directory ()
 	(file-name-directory (file-truename (buffer-file-name (current-buffer)))))
 
-(add-hook 'rule-mode-hook	(lambda () (add-to-list 'rule-mode-alist (list (rule-mode-buffer-directory) (current-buffer)))))
+(add-hook 'rule-mode-hook	(lambda () (add-to-list 'rule-mode-alist (list (rule-mode-buffer-directory) (current-buffer))) (sort rule-mode-alist 'string>)))
+
+(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
 
 ;;;###autoload
 (define-minor-mode rule-minor-mode ; RULE#6
 	"Toggle minor rule-mode."
 	:init-value nil
-	:lighter " RULES"
+	:lighter " RULES" ; XXX (concat " " rule-mode-label)
 	:keymap `((,(kbd "M-RET") . rule-mode-looking-for-rule))
 	:group   'rule-mode
 	:require 'rule-mode
-	(make-variable-buffer-local 'rule-mode-buffer-with-rules) ; RULE#7
-	(setq rule-mode-buffer-with-rules (second (assoc-string (rule-mode-buffer-directory) rule-mode-alist))) ; XXX
+	(setq rule-mode-buffer-with-rules (second (assoc-string (rule-mode-buffer-directory) rule-mode-alist))) ; RULE#7
 	;(run-hooks 'rule-minor-mode)
 )
+
+;; (defun rule-mode-find-rule-buffer ()
+;; 	(let ((rule-buffer-path (rule-mode-buffer-directory)))
+;; 		(while (not (second (assoc-string (rule-buffer-path))))
+;; 			(setq rule-buffer-path (split-string (
 
 (defun rule-mode-bounds-of-rule-at-point ()
 	"Return the start and end points of an integer at the current point.
